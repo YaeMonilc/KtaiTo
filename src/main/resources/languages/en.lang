@@ -1,0 +1,9 @@
+application.title = KtaiTo
+
+application.closing.text = Want to exit app?
+
+window.main.topBar.title = KtaiTo
+
+common.tip = Tip
+common.ok = OK
+common.cancel = CANCEL
