@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "JuRing"
+rootProject.name = "KtaiTo"

@@ -2,7 +2,9 @@ application.title = KtaiTo
 
 application.closing.text = Want to exit app?
 
-window.main.topBar.title = KtaiTo
+page.main.topAppBar.title = KtaiTo
+page.main.navigationRail.home = HOME
+page.main.navigationRail.settings = SETTINGS
 
 common.tip = Tip
 common.ok = OK
