@@ -23,6 +23,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -322,7 +323,6 @@ private fun AboutContent(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TestContent(
     applicationScope: ApplicationScope,
@@ -331,19 +331,29 @@ private fun TestContent(
     var alertDialogShow by remember { mutableStateOf(false) }
     var alertDialogContent by remember { mutableStateOf("") }
 
+    var inputDialogShow by remember { mutableStateOf(false) }
+    var inputDialogContent by remember { mutableStateOf("") }
+    var inputDialogOk : () -> Unit = fun() {
+
+    }
+
 
     Button(
         onClick = {
-            val process = Runtime.getRuntime().exec("java -version")
-            alertDialogContent = String(process.errorStream.readAllBytes())
-            alertDialogShow = true
+            inputDialogOk = fun() {
+                runBlocking(Dispatchers.IO) {
+                    val process = Runtime.getRuntime().exec(inputDialogContent)
+                    alertDialogContent = String(process.errorStream.readAllBytes())
+                    alertDialogShow = true
+                }
+            }
+            inputDialogShow = true
         }
     ) {
         Text("Runtime exec")
     }
 
     Box {
-
         AlertDialog(
             visibility = alertDialogShow,
             icon = { Icon(Icons.Default.Info, null) },
@@ -361,6 +371,44 @@ private fun TestContent(
                 Button(
                     onClick = {
                         alertDialogShow = false
+                    }
+                ) {
+                    Text(getLangText("common.cancel"))
+                }
+            },
+            onDismissRequest = { alertDialogShow = false }
+        )
+
+        AlertDialog(
+            visibility = inputDialogShow,
+            icon = { Icon(Icons.Default.Info, null) },
+            title = getLangText("common.tip"),
+            content = {
+              OutlinedTextField(
+                  modifier = Modifier
+                      .padding(top = 20.dp, bottom = 20.dp)
+                      .fillMaxWidth(),
+                  value = inputDialogContent,
+                  onValueChange = {
+                      inputDialogContent = it
+                  },
+                  label = { Text("命令") },
+                  enabled = true
+              )
+            },
+            footer = {
+                Button(
+                    modifier = Modifier.padding(end = 10.dp),
+                    onClick = {
+                        inputDialogOk()
+                        inputDialogShow = false
+                    }
+                ) {
+                    Text(getLangText("common.ok"))
+                }
+                Button(
+                    onClick = {
+                        inputDialogShow = false
                     }
                 ) {
                     Text(getLangText("common.cancel"))

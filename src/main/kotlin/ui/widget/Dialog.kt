@@ -7,9 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AlertDialogProvider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.PopupAlertDialogProvider
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,14 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.window.DialogWindow
-import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import utils.toSpeed
-import java.beans.Visibility
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -80,7 +73,7 @@ fun Dialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Card(
-                                modifier = Modifier.widthIn(200.dp, 400.dp)
+                                modifier = Modifier.widthIn(50.dp, 400.dp)
                             ) {
                                 Column(
                                     modifier = Modifier.padding(20.dp)
@@ -132,7 +125,6 @@ fun AlertDialog(
     footer: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-
     Dialog(
         visibility,
         icon,
@@ -144,6 +136,38 @@ fun AlertDialog(
                 text = content
             )
         },
+        {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                ) {
+                    footer()
+                }
+            }
+        },
+        onDismissRequest
+    )
+}
+
+@Composable
+fun AlertDialog(
+    visibility: Boolean,
+    icon: @Composable () -> Unit = {},
+    title: String = "",
+    topButton: @Composable () -> Unit = {},
+    content: @Composable () -> Unit,
+    footer: @Composable () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    Dialog(
+        visibility,
+        icon,
+        title,
+        topButton,
+        content,
         {
             Box(
                 modifier = Modifier.fillMaxWidth()
