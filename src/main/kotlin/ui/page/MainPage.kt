@@ -275,7 +275,9 @@ private fun HomeContent(
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp),
-                onClick = {}
+                onClick = {
+                    Runtime.getRuntime().exec("cmd /c start https://yuanshen.com")
+                }
             ) {
                 Text("原神启动")
             }
