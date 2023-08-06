@@ -26,11 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.*
 import ui.widget.AlertDialog
 import utils.getConfig
 import utils.getLangText
 import utils.toSpeed
+import java.io.InputStreamReader
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
@@ -121,6 +123,14 @@ fun MainPage(
                             contentToggle("page.main.navigationRail.about")
                         },
                     )
+                    NavigationRailItem(
+                        selected = navigationRailSelect == "page.main.navigationRail.test",
+                        icon = { Icon(Icons.Default.Build, null) },
+                        label = { Text(getLangText("page.main.navigationRail.test")) },
+                        onClick = {
+                            contentToggle("page.main.navigationRail.test")
+                        },
+                    )
                 }
                 Card(
                     modifier = Modifier
@@ -171,6 +181,7 @@ fun MainPage(
                                 "page.main.navigationRail.home" -> HomeContent(applicationScope, frameWindowScope)
                                 "page.main.navigationRail.settings" -> SettingContent(applicationScope, frameWindowScope)
                                 "page.main.navigationRail.about" -> AboutContent(applicationScope, frameWindowScope)
+                                "page.main.navigationRail.test" -> TestContent(applicationScope, frameWindowScope)
                             }
                         }
                     }
@@ -312,6 +323,67 @@ private fun AboutContent(
             ) {
                 Text(getLangText("page.main.aboutContent.button"))
             }
+        }
+    }
+}
+
+@Composable
+private fun TestContent(
+    applicationScope: ApplicationScope,
+    frameWindowScope: FrameWindowScope
+) {
+    var alertDialogShow by remember { mutableStateOf(false) }
+    var alertDialogContent by remember { mutableStateOf("") }
+
+
+    Button(
+        onClick = {
+            val process = Runtime.getRuntime().exec("java -version")
+            alertDialogContent = String(process.errorStream.readAllBytes())
+            alertDialogShow = true
+        }
+    ) {
+        Text("Runtime exec")
+    }
+
+    Box(
+        modifier = Modifier
+            .zIndex(5F)
+            .fillMaxSize()
+            .absoluteOffset(0.dp, 0.dp)
+    ) {
+        AnimatedVisibility(
+            visible = alertDialogShow,
+            enter = fadeIn(
+                animationSpec = tween(200.toSpeed())
+            ),
+            exit = fadeOut(
+                animationSpec = tween(200.toSpeed())
+            )
+        ) {
+            AlertDialog(
+                icon = { Icon(Icons.Default.Info, null) },
+                title = getLangText("common.tip"),
+                content = alertDialogContent,
+                footer = {
+                    Button(
+                        modifier = Modifier.padding(end = 10.dp),
+                        onClick = {
+                            alertDialogShow = false
+                        }
+                    ) {
+                        Text(getLangText("common.ok"))
+                    }
+                    Button(
+                        onClick = {
+                            alertDialogShow = false
+                        }
+                    ) {
+                        Text(getLangText("common.cancel"))
+                    }
+                },
+                onDismissRequest = { alertDialogShow = false }
+            )
         }
     }
 }
