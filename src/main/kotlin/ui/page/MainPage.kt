@@ -193,39 +193,30 @@ fun MainPage(
             }
         }
         Box {
-            AnimatedVisibility(
-                visible = windowClosing,
-                enter = fadeIn(
-                    animationSpec = tween(200.toSpeed())
-                ),
-                exit = fadeOut(
-                    animationSpec = tween(200.toSpeed())
-                )
-            ) {
-                AlertDialog(
-                    icon = { Icon(Icons.Default.Info, null) },
-                    title = getLangText("common.tip"),
-                    content = getLangText("application.closing.text"),
-                    footer = {
-                        Button(
-                            modifier = Modifier.padding(end = 10.dp),
-                            onClick = {
-                                applicationScope.exitApplication()
-                            }
-                        ) {
-                            Text(getLangText("common.ok"))
+            AlertDialog(
+                visibility = windowClosing,
+                icon = { Icon(Icons.Default.Info, null) },
+                title = getLangText("common.tip"),
+                content = getLangText("application.closing.text"),
+                footer = {
+                    Button(
+                        modifier = Modifier.padding(end = 10.dp),
+                        onClick = {
+                            applicationScope.exitApplication()
                         }
-                        Button(
-                            onClick = {
-                                windowClosing = false
-                            }
-                        ) {
-                            Text(getLangText("common.cancel"))
+                    ) {
+                        Text(getLangText("common.ok"))
+                    }
+                    Button(
+                        onClick = {
+                            windowClosing = false
                         }
-                    },
-                    onDismissRequest = { windowClosing = false }
-                )
-            }
+                    ) {
+                        Text(getLangText("common.cancel"))
+                    }
+                },
+                onDismissRequest = { windowClosing = false }
+            )
         }
     }
 }
@@ -351,45 +342,31 @@ private fun TestContent(
         Text("Runtime exec")
     }
 
-    Box(
-        modifier = Modifier
-            .zIndex(5F)
-            .fillMaxSize()
-            .absoluteOffset(0.dp, 0.dp)
-    ) {
+    Box {
 
-        AnimatedVisibility(
-            visible = alertDialogShow,
-            enter = fadeIn(
-                animationSpec = tween(200.toSpeed())
-            ),
-            exit = fadeOut(
-                animationSpec = tween(200.toSpeed())
-            )
-        ) {
-            AlertDialog(
-                icon = { Icon(Icons.Default.Info, null) },
-                title = getLangText("common.tip"),
-                content = alertDialogContent,
-                footer = {
-                    Button(
-                        modifier = Modifier.padding(end = 10.dp),
-                        onClick = {
-                            alertDialogShow = false
-                        }
-                    ) {
-                        Text(getLangText("common.ok"))
+        AlertDialog(
+            visibility = alertDialogShow,
+            icon = { Icon(Icons.Default.Info, null) },
+            title = getLangText("common.tip"),
+            content = alertDialogContent,
+            footer = {
+                Button(
+                    modifier = Modifier.padding(end = 10.dp),
+                    onClick = {
+                        alertDialogShow = false
                     }
-                    Button(
-                        onClick = {
-                            alertDialogShow = false
-                        }
-                    ) {
-                        Text(getLangText("common.cancel"))
+                ) {
+                    Text(getLangText("common.ok"))
+                }
+                Button(
+                    onClick = {
+                        alertDialogShow = false
                     }
-                },
-                onDismissRequest = { alertDialogShow = false }
-            )
-        }
+                ) {
+                    Text(getLangText("common.cancel"))
+                }
+            },
+            onDismissRequest = { alertDialogShow = false }
+        )
     }
 }
