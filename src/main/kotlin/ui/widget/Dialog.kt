@@ -95,7 +95,12 @@ fun AlertDialog(
         icon,
         title,
         topButton,
-        { Text(content) },
+        {
+            Text(
+                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                text = content
+            )
+        },
         {
             Box(
                 modifier = Modifier.fillMaxWidth()

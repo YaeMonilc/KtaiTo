@@ -5,6 +5,10 @@ application.closing.text = Want to exit app?
 page.main.topAppBar.title = KtaiTo
 page.main.navigationRail.home = HOME
 page.main.navigationRail.settings = SETTINGS
+page.main.navigationRail.about = ABOUT
+
+page.main.aboutContent.text = This is a Minecraft launcher
+page.main.aboutContent.button = surprise
 
 common.tip = Tip
 common.ok = OK

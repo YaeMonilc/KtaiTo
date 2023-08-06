@@ -1,0 +1,15 @@
+application.title = KtaiTo
+
+application.closing.text = 确定退出软件？
+
+page.main.topAppBar.title = KtaiTo
+page.main.navigationRail.home = 主页
+page.main.navigationRail.settings = 设置
+page.main.navigationRail.about = 关于
+
+page.main.aboutContent.text = 这是一个我的世界的启动器
+page.main.aboutContent.button = 惊喜
+
+common.tip = 提示
+common.ok = 确定
+common.cancel = 取消

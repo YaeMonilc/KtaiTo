@@ -30,8 +30,8 @@ import kotlinx.coroutines.*
 import ui.widget.AlertDialog
 import utils.getConfig
 import utils.getLangText
+import utils.toSpeed
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
 @Composable
@@ -47,7 +47,7 @@ fun MainPage(
     val backgroundImageAnimatedToggle = fun(image: String) {
         GlobalScope.launch {
             backgroundImageShow = false
-            delay((300 / getConfig("application.animatedSpeed").toDouble()).roundToLong())
+            delay(300.toSpeed().toLong())
             backgroundImage = "/image/$image.png"
             backgroundImageShow = true
         }
@@ -61,7 +61,7 @@ fun MainPage(
         GlobalScope.launch {
             contentShow = false
             backgroundImageAnimatedToggle(name)
-            delay((150 / getConfig("application.animatedSpeed").toDouble()).roundToLong())
+            delay(150.toSpeed().toLong())
             navigationRailSelect = name
             contentShow = true
         }
@@ -113,6 +113,14 @@ fun MainPage(
                             contentToggle("page.main.navigationRail.settings")
                         },
                     )
+                    NavigationRailItem(
+                        selected = navigationRailSelect == "page.main.navigationRail.about",
+                        icon = { Icon(Icons.Default.Info, null) },
+                        label = { Text(getLangText("page.main.navigationRail.about")) },
+                        onClick = {
+                            contentToggle("page.main.navigationRail.about")
+                        },
+                    )
                 }
                 Card(
                     modifier = Modifier
@@ -133,13 +141,13 @@ fun MainPage(
                                 initialOffsetX = {
                                     it / 2
                                 },
-                                animationSpec = tween((350 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                                animationSpec = tween(350.toSpeed())
                             ),
                             exit = slideOutHorizontally(
                                 targetOffsetX = {
                                     it
                                 },
-                                animationSpec = tween((350 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                                animationSpec = tween(350.toSpeed())
                             )
                         ) {
                             Image(
@@ -153,15 +161,16 @@ fun MainPage(
                                 .padding(10.dp),
                             visible = contentShow,
                             enter = fadeIn(
-                                animationSpec = tween((150 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                                animationSpec = tween(150.toSpeed())
                             ),
                             exit = fadeOut(
-                                animationSpec = tween((150 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                                animationSpec = tween(150.toSpeed())
                             )
                         ) {
                             when(navigationRailSelect) {
                                 "page.main.navigationRail.home" -> HomeContent(applicationScope, frameWindowScope)
                                 "page.main.navigationRail.settings" -> SettingContent(applicationScope, frameWindowScope)
+                                "page.main.navigationRail.about" -> AboutContent(applicationScope, frameWindowScope)
                             }
                         }
                     }
@@ -172,10 +181,10 @@ fun MainPage(
             AnimatedVisibility(
                 visible = windowClosing,
                 enter = fadeIn(
-                    animationSpec = tween((200 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                    animationSpec = tween(200.toSpeed())
                 ),
                 exit = fadeOut(
-                    animationSpec = tween((200 / getConfig("application.animatedSpeed").toDouble()).roundToInt())
+                    animationSpec = tween(200.toSpeed())
                 )
             ) {
                 AlertDialog(
@@ -273,4 +282,36 @@ private fun SettingContent(
     frameWindowScope: FrameWindowScope
 ) {
 
+}
+
+@Composable
+private fun AboutContent(
+    applicationScope: ApplicationScope,
+    frameWindowScope: FrameWindowScope
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                modifier = Modifier.size(40.dp),
+                imageVector = Icons.Default.Star,
+                contentDescription = null
+            )
+            Text(getLangText("page.main.aboutContent.text"))
+            Spacer(Modifier.requiredHeight(10.dp))
+            Button(
+                onClick = {
+                    applicationScope.exitApplication()
+                }
+            ) {
+                Text(getLangText("page.main.aboutContent.button"))
+            }
+        }
+    }
 }
