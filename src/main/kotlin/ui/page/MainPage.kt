@@ -6,6 +6,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialogProvider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.UndecoratedWindowAlertDialogProvider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.*
 import ui.widget.AlertDialog
@@ -327,6 +331,7 @@ private fun AboutContent(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TestContent(
     applicationScope: ApplicationScope,
@@ -352,6 +357,7 @@ private fun TestContent(
             .fillMaxSize()
             .absoluteOffset(0.dp, 0.dp)
     ) {
+
         AnimatedVisibility(
             visible = alertDialogShow,
             enter = fadeIn(
