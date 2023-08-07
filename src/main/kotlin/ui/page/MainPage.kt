@@ -55,6 +55,12 @@ fun MainPage(
     }
 
     var navigationRailSelect by remember { mutableStateOf("page.main.navigationRail.home") }
+    val navigationRailItemShow = mutableStateMapOf(
+        "page.main.navigationRail.home" to true,
+        "page.main.navigationRail.settings" to true,
+        "page.main.navigationRail.about" to true,
+        "page.main.navigationRail.test" to true
+    )
     var contentShow by remember { mutableStateOf(true) }
     val contentToggle = fun(name: String) {
         if (navigationRailSelect == name)
@@ -98,38 +104,82 @@ fun MainPage(
             )
             Row {
                 NavigationRail {
-                    NavigationRailItem(
-                        selected = navigationRailSelect == "page.main.navigationRail.home",
-                        icon = { Icon(Icons.Default.Home, null) },
-                        label = { Text(getLangText("page.main.navigationRail.home")) },
-                        onClick = {
-                            contentToggle("page.main.navigationRail.home")
-                        },
-                    )
-                    NavigationRailItem(
-                        selected = navigationRailSelect == "page.main.navigationRail.settings",
-                        icon = { Icon(Icons.Default.Settings, null) },
-                        label = { Text(getLangText("page.main.navigationRail.settings")) },
-                        onClick = {
-                            contentToggle("page.main.navigationRail.settings")
-                        },
-                    )
-                    NavigationRailItem(
-                        selected = navigationRailSelect == "page.main.navigationRail.about",
-                        icon = { Icon(Icons.Default.Info, null) },
-                        label = { Text(getLangText("page.main.navigationRail.about")) },
-                        onClick = {
-                            contentToggle("page.main.navigationRail.about")
-                        },
-                    )
-                    NavigationRailItem(
-                        selected = navigationRailSelect == "page.main.navigationRail.test",
-                        icon = { Icon(Icons.Default.Build, null) },
-                        label = { Text(getLangText("page.main.navigationRail.test")) },
-                        onClick = {
-                            contentToggle("page.main.navigationRail.test")
-                        },
-                    )
+
+                    AnimatedVisibility(
+                        visible = navigationRailItemShow["page.main.navigationRail.home"] ?: false,
+                        enter = fadeIn(
+                            animationSpec = tween(150.toSpeed())
+                        ),
+                        exit = fadeOut(
+                            animationSpec = tween(150.toSpeed())
+                        )
+                    ) {
+                        NavigationRailItem(
+                            selected = navigationRailSelect == "page.main.navigationRail.home",
+                            icon = { Icon(Icons.Default.Home, null) },
+                            label = { Text(getLangText("page.main.navigationRail.home")) },
+                            onClick = {
+                                contentToggle("page.main.navigationRail.home")
+                            }
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = navigationRailItemShow["page.main.navigationRail.settings"] ?: false,
+                        enter = fadeIn(
+                            animationSpec = tween(150.toSpeed())
+                        ),
+                        exit = fadeOut(
+                            animationSpec = tween(150.toSpeed())
+                        )
+                    ) {
+                        NavigationRailItem(
+                            selected = navigationRailSelect == "page.main.navigationRail.settings",
+                            icon = { Icon(Icons.Default.Settings, null) },
+                            label = { Text(getLangText("page.main.navigationRail.settings")) },
+                            onClick = {
+                                contentToggle("page.main.navigationRail.settings")
+                            }
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = navigationRailItemShow["page.main.navigationRail.about"] ?: false,
+                        enter = fadeIn(
+                            animationSpec = tween(150.toSpeed())
+                        ),
+                        exit = fadeOut(
+                            animationSpec = tween(150.toSpeed())
+                        )
+                    ) {
+                        NavigationRailItem(
+                            selected = navigationRailSelect == "page.main.navigationRail.about",
+                            icon = { Icon(Icons.Default.Info, null) },
+                            label = { Text(getLangText("page.main.navigationRail.about")) },
+                            onClick = {
+                                contentToggle("page.main.navigationRail.about")
+                            }
+                        )
+                    }
+
+                    AnimatedVisibility(
+                        visible = navigationRailItemShow["page.main.navigationRail.test"] ?: false,
+                        enter = fadeIn(
+                            animationSpec = tween(150.toSpeed())
+                        ),
+                        exit = fadeOut(
+                            animationSpec = tween(150.toSpeed())
+                        )
+                    ) {
+                        NavigationRailItem(
+                            selected = navigationRailSelect == "page.main.navigationRail.test",
+                            icon = { Icon(Icons.Default.Build, null) },
+                            label = { Text(getLangText("page.main.navigationRail.test")) },
+                            onClick = {
+                                contentToggle("page.main.navigationRail.test")
+                            },
+                        )
+                    }
                 }
                 Card(
                     modifier = Modifier
