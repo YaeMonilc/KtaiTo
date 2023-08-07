@@ -17,7 +17,7 @@ fun MainWindow(applicationScope: ApplicationScope) {
             width = 845.dp,
             height = 505.dp
         ),
-        resizable = false,
+        resizable = true,
         onCloseRequest = applicationScope::exitApplication
     ) {
         MaterialTheme {

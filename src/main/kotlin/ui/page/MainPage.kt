@@ -6,9 +6,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialogProvider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.UndecoratedWindowAlertDialogProvider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -22,22 +19,19 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.zIndex
 import kotlinx.coroutines.*
+import ui.page.content.main.AboutContent
+import ui.page.content.main.HomeContent
+import ui.page.content.main.SettingContent
+import ui.page.content.main.TestContent
 import ui.widget.AlertDialog
 import utils.getConfig
 import utils.getLangText
 import utils.toSpeed
-import java.io.InputStreamReader
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class, DelicateCoroutinesApi::class)
@@ -182,17 +176,18 @@ fun MainPage(
                                 animationSpec = tween(150.toSpeed())
                             )
                         ) {
-                            when(navigationRailSelect) {
-                                "page.main.navigationRail.home" -> HomeContent(applicationScope, frameWindowScope)
-                                "page.main.navigationRail.settings" -> SettingContent(applicationScope, frameWindowScope)
-                                "page.main.navigationRail.about" -> AboutContent(applicationScope, frameWindowScope)
-                                "page.main.navigationRail.test" -> TestContent(applicationScope, frameWindowScope)
-                            }
+                            PageController(
+                                navigationRailSelect,
+                                applicationScope,
+                                frameWindowScope,
+                                contentToggle
+                            )
                         }
                     }
                 }
             }
         }
+
         Box {
             AlertDialog(
                 visibility = windowClosing,
@@ -223,200 +218,16 @@ fun MainPage(
 }
 
 @Composable
-private fun HomeContent(
+private fun PageController(
+    navigationRailSelect: String,
     applicationScope: ApplicationScope,
-    frameWindowScope: FrameWindowScope
+    frameWindowScope: FrameWindowScope,
+    contentToggle: (name: String) -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        OutlinedCard(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 20.dp, start = 20.dp)
-                .width(200.dp)
-                .heightIn(10.dp, 200.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .clickable(true) {
-
-                    }
-                    .padding(10.dp)
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "原神！",
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Box(
-                    modifier = Modifier.padding(top = 5.dp)
-                ) {
-                    Divider(
-                        modifier = Modifier
-                            .height(1.dp)
-                    )
-                }
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "你说的对，但是《烟神》是由理塘丁真自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「理塘」的幻想世界，在这里，被神选中的人将被授予「尼古丁」，导引尼古丁之力。你将扮演一位名为「雪豹」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的小马珍珠们，和他们一起击败强敌，找回失散的锐克五——同时，逐步发掘「烟神」的真相。",
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
-                )
-            }
-        }
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 20.dp, end = 20.dp)
-        ) {
-            Button(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(50.dp),
-                onClick = {
-                    Runtime.getRuntime().exec("cmd /c start https://yuanshen.com")
-                }
-            ) {
-                Text("原神启动")
-            }
-        }
-    }
-}
-
-@Composable
-private fun SettingContent(
-    applicationScope: ApplicationScope,
-    frameWindowScope: FrameWindowScope
-) {
-
-}
-
-@Composable
-private fun AboutContent(
-    applicationScope: ApplicationScope,
-    frameWindowScope: FrameWindowScope
-) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(
-                modifier = Modifier.size(40.dp),
-                imageVector = Icons.Default.Star,
-                contentDescription = null
-            )
-            Text(getLangText("page.main.aboutContent.text"))
-            Spacer(Modifier.requiredHeight(10.dp))
-            Button(
-                onClick = {
-                    applicationScope.exitApplication()
-                }
-            ) {
-                Text(getLangText("page.main.aboutContent.button"))
-            }
-        }
-    }
-}
-
-@Composable
-private fun TestContent(
-    applicationScope: ApplicationScope,
-    frameWindowScope: FrameWindowScope
-) {
-    var alertDialogShow by remember { mutableStateOf(false) }
-    var alertDialogContent by remember { mutableStateOf("") }
-
-    var inputDialogShow by remember { mutableStateOf(false) }
-    var inputDialogContent by remember { mutableStateOf("") }
-    var inputDialogOk : () -> Unit = fun() {
-
-    }
-
-
-    Button(
-        onClick = {
-            inputDialogOk = fun() {
-                runBlocking(Dispatchers.IO) {
-                    val process = Runtime.getRuntime().exec(inputDialogContent)
-                    alertDialogContent = String(process.errorStream.readAllBytes())
-                    alertDialogShow = true
-                }
-            }
-            inputDialogShow = true
-        }
-    ) {
-        Text("Runtime exec")
-    }
-
-    Box {
-        AlertDialog(
-            visibility = alertDialogShow,
-            icon = { Icon(Icons.Default.Info, null) },
-            title = getLangText("common.tip"),
-            content = alertDialogContent,
-            footer = {
-                Button(
-                    modifier = Modifier.padding(end = 10.dp),
-                    onClick = {
-                        alertDialogShow = false
-                    }
-                ) {
-                    Text(getLangText("common.ok"))
-                }
-                Button(
-                    onClick = {
-                        alertDialogShow = false
-                    }
-                ) {
-                    Text(getLangText("common.cancel"))
-                }
-            },
-            onDismissRequest = { alertDialogShow = false }
-        )
-
-        AlertDialog(
-            visibility = inputDialogShow,
-            icon = { Icon(Icons.Default.Info, null) },
-            title = getLangText("common.tip"),
-            content = {
-              OutlinedTextField(
-                  modifier = Modifier
-                      .padding(top = 20.dp, bottom = 20.dp)
-                      .fillMaxWidth(),
-                  value = inputDialogContent,
-                  onValueChange = {
-                      inputDialogContent = it
-                  },
-                  label = { Text("命令") },
-                  enabled = true
-              )
-            },
-            footer = {
-                Button(
-                    modifier = Modifier.padding(end = 10.dp),
-                    onClick = {
-                        inputDialogOk()
-                        inputDialogShow = false
-                    }
-                ) {
-                    Text(getLangText("common.ok"))
-                }
-                Button(
-                    onClick = {
-                        inputDialogShow = false
-                    }
-                ) {
-                    Text(getLangText("common.cancel"))
-                }
-            },
-            onDismissRequest = { alertDialogShow = false }
-        )
+    when(navigationRailSelect) {
+        "page.main.navigationRail.home" -> HomeContent(applicationScope, frameWindowScope, contentToggle)
+        "page.main.navigationRail.settings" -> SettingContent(applicationScope, frameWindowScope, contentToggle)
+        "page.main.navigationRail.about" -> AboutContent(applicationScope, frameWindowScope, contentToggle)
+        "page.main.navigationRail.test" -> TestContent(applicationScope, frameWindowScope, contentToggle)
     }
 }

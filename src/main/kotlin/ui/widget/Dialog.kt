@@ -21,14 +21,11 @@ import utils.toSpeed
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Dialog(
+fun PopuopWindow(
     visibility: Boolean,
-    icon: @Composable () -> Unit = {},
-    title: String = "",
-    topButton: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
-    footer: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
+    modifier: Modifier,
+    content: @Composable () -> Unit
 ) {
     val transitionState = remember { MutableTransitionState(false) }
     transitionState.targetState = visibility
@@ -43,6 +40,7 @@ fun Dialog(
                     popupContentSize: IntSize
                 ): IntOffset = IntOffset.Zero
             },
+            focusable = true
         ) {
             AnimatedVisibility(
                 visibleState = transitionState,
@@ -73,44 +71,64 @@ fun Dialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Card(
-                                modifier = Modifier.widthIn(50.dp, 400.dp)
+                                modifier = Modifier
+                                    .then(modifier)
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(20.dp)
-                                ) {
-                                    Box(
-
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.align(Alignment.CenterStart)
-                                        ) {
-                                            icon()
-                                            Text(
-                                                modifier = Modifier.padding(start = 5.dp),
-                                                text = title,
-                                                fontSize = 18.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        }
-                                        Box(
-                                            modifier = Modifier.align(Alignment.CenterEnd)
-                                        ) {
-                                            topButton()
-                                        }
-                                    }
-                                    Column {
-                                        content()
-                                    }
-                                    Row {
-                                        footer()
-                                    }
-                                }
+                                content()
                             }
                         }
                     }
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+fun Dialog(
+    visibility: Boolean,
+    onDismissRequest: () -> Unit,
+    icon: @Composable () -> Unit = {},
+    title: String = "",
+    topButton: @Composable () -> Unit = {},
+    footer: @Composable () -> Unit,
+    content: @Composable () -> Unit
+) {
+    PopuopWindow(
+        visibility,
+        onDismissRequest,
+        Modifier.widthIn(50.dp, 400.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+            Box(
+
+            ) {
+                Row(
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    icon()
+                    Text(
+                        modifier = Modifier.padding(start = 5.dp),
+                        text = title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Box(
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    topButton()
+                }
+            }
+            Column {
+                content()
+            }
+            Row {
+                footer()
+            }
         }
     }
 }
@@ -127,15 +145,10 @@ fun AlertDialog(
 ) {
     Dialog(
         visibility,
+        onDismissRequest,
         icon,
         title,
         topButton,
-        {
-            Text(
-                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
-                text = content
-            )
-        },
         {
             Box(
                 modifier = Modifier.fillMaxWidth()
@@ -147,27 +160,31 @@ fun AlertDialog(
                     footer()
                 }
             }
-        },
-        onDismissRequest
-    )
+        }
+    ) {
+        Text(
+            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+            text = content
+        )
+    }
 }
 
 @Composable
 fun AlertDialog(
     visibility: Boolean,
+    onDismissRequest: () -> Unit,
     icon: @Composable () -> Unit = {},
     title: String = "",
     topButton: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
     footer: @Composable () -> Unit,
-    onDismissRequest: () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Dialog(
         visibility,
+        onDismissRequest,
         icon,
         title,
         topButton,
-        content,
         {
             Box(
                 modifier = Modifier.fillMaxWidth()
@@ -179,7 +196,8 @@ fun AlertDialog(
                     footer()
                 }
             }
-        },
-        onDismissRequest
-    )
+        }
+    ) {
+        content()
+    }
 }
