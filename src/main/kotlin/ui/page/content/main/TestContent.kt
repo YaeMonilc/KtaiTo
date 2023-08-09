@@ -81,7 +81,13 @@ fun TestContent(
             ) {
                 Text("To Home")
             }
-
+            Button(
+                onClick = {
+                    throw NullPointerException()
+                }
+            ) {
+                Text("Throw Exception")
+            }
         }
     }
 
