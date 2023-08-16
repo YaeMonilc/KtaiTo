@@ -98,7 +98,8 @@ fun Dialog(
     PopuopWindow(
         visibility,
         onDismissRequest,
-        Modifier.widthIn(50.dp, 400.dp)
+        Modifier
+            .widthIn(50.dp, 400.dp)
     ) {
         Column(
             modifier = Modifier.padding(20.dp)
@@ -123,7 +124,9 @@ fun Dialog(
                     topButton()
                 }
             }
-            Column {
+            Column(
+
+            ) {
                 content()
             }
             Row {

@@ -25,6 +25,10 @@ dependencies {
     implementation(compose.desktop.windows_x64)
     implementation("org.jetbrains.compose.material3:material3-desktop:1.5.0-beta01")
 
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 compose.desktop {
